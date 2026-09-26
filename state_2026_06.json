@@ -1,0 +1,37 @@
+{
+  "month": "2026-06",
+  "regional_sales": {
+    "Bengaluru": 170294.11,
+    "Guntur": 99745.18,
+    "Hyderabad": 294088.56,
+    "Karimnagar": 34490.58,
+    "Kurnool": 0.0,
+    "Nellore": 94393.62,
+    "Tirupati": 75530.99,
+    "Vijayawada": 153849.68,
+    "Visakhapatnam": 100735.57,
+    "Warangal": 66715.24
+  },
+  "total_sales": 1089843.53,
+  "mom_changes": {
+    "Bengaluru": -1.52,
+    "Guntur": -28.11,
+    "Hyderabad": 20.61,
+    "Karimnagar": -44.0,
+    "Kurnool": 0.0,
+    "Nellore": 3.52,
+    "Tirupati": -17.07,
+    "Vijayawada": -12.02,
+    "Visakhapatnam": 99.12,
+    "Warangal": -14.84
+  },
+  "flagged_regions": {
+    "Guntur": -28.11,
+    "Hyderabad": 20.61,
+    "Karimnagar": -44.0,
+    "Tirupati": -17.07,
+    "Vijayawada": -12.02,
+    "Visakhapatnam": 99.12,
+    "Warangal": -14.84
+  }
+}

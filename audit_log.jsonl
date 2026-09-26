@@ -1,0 +1,3 @@
+{"timestamp": "2026-09-26T11:13:09.944588+00:00", "run_id": "RUN-2026-05-GUNTUR-001", "region": "Guntur", "decision": "approve", "reviewer_note": "Verified all figures against pharmeasy.db; numbers and CII logic approved for regional distribution."}
+{"timestamp": "2026-09-26T11:13:09.945860+00:00", "run_id": "RUN-2026-05-GUNTUR-002", "region": "Guntur", "decision": "edit", "reviewer_note": "Clarify in Assumptions that bulk institutional buying is an unverified hypothesis; do not publish yet."}
+{"timestamp": "2026-09-26T11:13:09.946707+00:00", "run_id": "RUN-2026-05-GUNTUR-003", "region": "Guntur", "decision": "reject", "reviewer_note": "Rejected proposal to sign permanent warehouse lease based solely on May peak; June -28% pullback invalidates thesis."}

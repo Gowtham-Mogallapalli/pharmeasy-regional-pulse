@@ -1,0 +1,9 @@
+.venv/
+.venv.zip
+__pycache__/
+*.py[cod]
+*$py.class
+.vscode/
+.idea/
+.DS_Store
+*.log
