@@ -32,8 +32,8 @@ To review this capstone project as an integrated package, consume the artifacts 
 ### 2. Installation
 ```bash
 # Clone the repository
-git clone <REPO_URL>
-cd Capstone_Project
+git clone https://github.com/Gowtham-Mogallapalli/pharmeasy-regional-pulse.git
+cd pharmeasy-regional-pulse
 
 # Create and activate virtual environment
 python -m venv .venv
