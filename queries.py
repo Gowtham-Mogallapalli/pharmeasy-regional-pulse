@@ -8,6 +8,7 @@ Executes and prints the output of all required SQL queries against pharmeasy.db:
 5. Region x Month metrics and Month-on-Month (MoM) growth calculations
 """
 
+import os
 import sqlite3
 import pandas as pd
 
@@ -15,6 +16,11 @@ DB_PATH = "pharmeasy.db"
 
 
 def run_all_queries(db_path: str = DB_PATH):
+    if not os.path.exists(db_path):
+        print(f"Database '{db_path}' not found. Building database via build_db.py...")
+        import subprocess, sys
+        subprocess.check_call([sys.executable, "build_db.py"])
+
     conn = sqlite3.connect(db_path)
 
     print("=" * 85)

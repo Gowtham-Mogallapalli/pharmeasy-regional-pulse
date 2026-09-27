@@ -25,6 +25,11 @@ def clean_orders_data(
     output_clean_path: str = "orders_clean.csv",
 ) -> pd.DataFrame:
     """Loads raw orders dataset and applies the 5-step cleaning pipeline in exact sequence."""
+    if not os.path.exists(raw_csv_path) or not os.path.exists(regions_master_path):
+        logger.info("Raw dataset not found. Generating deterministically via generate_dataset.py...")
+        import subprocess, sys
+        subprocess.check_call([sys.executable, "generate_dataset.py"])
+
     logger.info("Loading raw dataset from '%s'...", raw_csv_path)
     df = pd.read_csv(raw_csv_path)
     logger.info("Initial raw dataset shape: %s rows, %s columns", df.shape[0], df.shape[1])

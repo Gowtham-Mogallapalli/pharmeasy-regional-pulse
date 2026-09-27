@@ -117,3 +117,33 @@ def load_previous_state_v1(path: str) -> Dict[str, Any]:
         data = json.load(f)
     logger.info("Loaded previous state from '%s'.", path)
     return data
+
+
+if __name__ == "__main__":
+    print("=" * 70)
+    print("METRICS ENGINE (PART 2) -- DEMONSTRATION")
+    print("=" * 70)
+    # Test division by zero
+    print(f"compute_percentage_change_v1(100.0, 0.0) -> {compute_percentage_change_v1(100.0, 0.0)}% (div-by-zero handled)")
+    print(f"compute_percentage_change_v1(138738.93, 62442.27) -> {compute_percentage_change_v1(138738.93, 62442.27)}% (Guntur Apr->May)")
+    
+    # Test flagging
+    changes_apr_may = {
+        "Hyderabad": 16.29,
+        "Bengaluru": -15.02,
+        "Vijayawada": 2.06,
+        "Guntur": 122.19,
+        "Visakhapatnam": -62.46,
+        "Nellore": 6.50,
+        "Warangal": -22.03,
+        "Tirupati": 66.87,
+        "Karimnagar": 23.63
+    }
+    flagged = flag_significant_regions_v1(changes_apr_may, threshold=8.0)
+    print(f"\nFlagged regions (|MoM| > 8%): {len(flagged)} of 9 regions flagged:")
+    for r, c in flagged.items():
+        print(f"  * {r:15}: {c:+.2f}%")
+    print(f"Nellore (+6.50%) flagged? {'Nellore' in flagged}")
+    print(f"Vijayawada (+2.06%) flagged? {'Vijayawada' in flagged}")
+    print("=" * 70)
+

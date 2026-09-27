@@ -65,35 +65,33 @@ st.markdown("""
 
 @st.cache_data
 def load_data():
-    """Loads cleaned orders and master regions from pharmeasy.db (or fallback CSVs)."""
+    """Loads cleaned orders and master regions from pharmeasy.db (auto-building if missing)."""
     db_path = "pharmeasy.db"
-    if os.path.exists(db_path):
-        conn = sqlite3.connect(db_path)
-        # Ensure zero-order regions (Kurnool) are included
-        query = """
-        SELECT 
-            r.region,
-            r.state,
-            r.tier,
-            o.order_id,
-            o.order_date,
-            strftime('%Y-%m', o.order_date) AS month,
-            o.category,
-            o.product,
-            o.quantity,
-            o.sales_inr,
-            o.profit_inr
-        FROM regions_master r
-        LEFT JOIN orders_clean o ON r.region = o.region;
-        """
-        df = pd.read_sql_query(query, conn)
-        regions_df = pd.read_sql_query("SELECT * FROM regions_master;", conn)
-        conn.close()
-    else:
-        df_orders = pd.read_csv("orders_clean.csv")
-        df_orders["month"] = df_orders["order_date"].str[:7]
-        regions_df = pd.read_csv("regions_master.csv")
-        df = pd.merge(regions_df, df_orders, on="region", how="left")
+    if not os.path.exists(db_path):
+        import subprocess, sys
+        subprocess.check_call([sys.executable, "build_db.py"])
+
+    conn = sqlite3.connect(db_path)
+    # Ensure zero-order regions (Kurnool) are included
+    query = """
+    SELECT 
+        r.region,
+        r.state,
+        r.tier,
+        o.order_id,
+        o.order_date,
+        strftime('%Y-%m', o.order_date) AS month,
+        o.category,
+        o.product,
+        o.quantity,
+        o.sales_inr,
+        o.profit_inr
+    FROM regions_master r
+    LEFT JOIN orders_clean o ON r.region = o.region;
+    """
+    df = pd.read_sql_query(query, conn)
+    regions_df = pd.read_sql_query("SELECT * FROM regions_master;", conn)
+    conn.close()
 
     return df, regions_df
 

@@ -250,3 +250,49 @@ def draft_report_v1(
 
     full_report_text = "\n".join(report_lines)
     return DraftReport(full_report_text, blocks)
+
+
+if __name__ == "__main__":
+    db_path = "pharmeasy.db"
+    if not os.path.exists(db_path):
+        print(f"Database '{db_path}' not found. Building database via build_db.py...")
+        import subprocess
+        subprocess.check_call([sys.executable, "build_db.py"])
+
+    import sqlite3
+    conn = sqlite3.connect(db_path)
+    metrics_query = """
+    WITH monthly AS (
+        SELECT 
+            r.region, r.tier, r.state,
+            COALESCE(SUM(CASE WHEN strftime('%Y-%m', o.order_date) = '2026-04' THEN o.sales_inr ELSE 0 END), 0) AS apr_sales_inr,
+            COALESCE(SUM(CASE WHEN strftime('%Y-%m', o.order_date) = '2026-05' THEN o.sales_inr ELSE 0 END), 0) AS may_sales_inr,
+            COALESCE(SUM(CASE WHEN strftime('%Y-%m', o.order_date) = '2026-06' THEN o.sales_inr ELSE 0 END), 0) AS jun_sales_inr
+        FROM regions_master r
+        LEFT JOIN orders_clean o ON r.region = o.region
+        GROUP BY r.region, r.tier, r.state
+    )
+    SELECT 
+        region, tier, state,
+        apr_sales_inr, may_sales_inr, jun_sales_inr,
+        CASE WHEN apr_sales_inr > 0 THEN ROUND(((may_sales_inr - apr_sales_inr) / apr_sales_inr) * 100.0, 2) ELSE 0.0 END AS mom_apr_to_may_pct,
+        CASE WHEN may_sales_inr > 0 THEN ROUND(((jun_sales_inr - may_sales_inr) / may_sales_inr) * 100.0, 2) ELSE 0.0 END AS mom_may_to_jun_pct
+    FROM monthly;
+    """
+    df_metrics = pd.read_sql_query(metrics_query, conn)
+    conn.close()
+
+    # All 8 flagged regions across both transitions
+    flagged = ["Hyderabad", "Bengaluru", "Guntur", "Visakhapatnam", "Warangal", "Tirupati", "Karimnagar", "Vijayawada"]
+    report = draft_report_v1(flagged, df_metrics)
+    print("=" * 75)
+    print("DRAFT REPORT V1 (PART 3) -- CII NARRATIVE GENERATOR")
+    print("=" * 75)
+    print(f"Generated CII blocks for {len(report.blocks)} regions:")
+    for reg, b in report.blocks.items():
+        print(f"\n--- {reg} ({b['tier']}) ---")
+        print(f"Context    : {b['context']}")
+        print(f"Insight    : {b['insight']}")
+        print(f"Implication: {b['implication']}")
+    print("=" * 75)
+

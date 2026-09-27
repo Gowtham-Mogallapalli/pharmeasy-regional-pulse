@@ -31,11 +31,11 @@ def build_database(
     """Builds and populates the SQLite database with regions_master and orders_clean."""
     logger.info("Initializing SQLite database at '%s'...", db_path)
 
-    # Ensure source CSV files exist
-    if not os.path.exists(regions_csv_path):
-        raise FileNotFoundError(f"Regions master file not found: {regions_csv_path}")
-    if not os.path.exists(orders_csv_path):
-        raise FileNotFoundError(f"Clean orders file not found: {orders_csv_path}")
+    # Ensure source CSV files exist, auto-cleaning if missing
+    if not os.path.exists(orders_csv_path) or not os.path.exists(regions_csv_path):
+        logger.info("Clean dataset not found. Running clean_data.py...")
+        import subprocess, sys
+        subprocess.check_call([sys.executable, "clean_data.py"])
 
     # Read data
     regions_df = pd.read_csv(regions_csv_path)
